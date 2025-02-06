@@ -22,6 +22,9 @@ export default function Admin() {
   const [updateAnswer, setUpdateAnswer] = useState(""); // Uppdaterat rätt svar
   const [updateCategory, setUpdateCategory] = useState(""); // Uppdaterad kategori
 
+  // Fördefinierade kategorier
+  const categories = ["Geography", "Sports", "Movie", "Science"];
+
   // Funktion för att lägga till en ny fråga
   const handleAddQuestion = () => {
     // Skickar den nya frågan till addQuestion-funktionen från context
@@ -102,13 +105,21 @@ export default function Admin() {
           onChange={(e) => setNewAnswer(e.target.value)}
           className="block w-full p-2 mb-2 border rounded"
         />
-        <input
-          type="text"
-          placeholder="Category"
+
+        {/* Dropdown for selecting category */}
+        <select
           value={newCategory}
           onChange={(e) => setNewCategory(e.target.value)}
           className="block w-full p-2 mb-2 border rounded"
-        />
+        >
+          <option value="">Select a category</option>
+          {categories.map((category, index) => (
+            <option key={index} value={category}>
+              {category}
+            </option>
+          ))}
+        </select>
+
         <button
           onClick={handleAddQuestion}
           className="px-4 py-2 bg-purple-600 text-white rounded hover:bg-purple-700"
@@ -157,13 +168,21 @@ export default function Admin() {
           onChange={(e) => setUpdateAnswer(e.target.value)}
           className="block w-full p-2 mb-2 border rounded"
         />
-        <input
-          type="text"
-          placeholder="Category"
+
+        {/* Dropdown for selecting category */}
+        <select
           value={updateCategory}
           onChange={(e) => setUpdateCategory(e.target.value)}
           className="block w-full p-2 mb-2 border rounded"
-        />
+        >
+          <option value="">Select a category</option>
+          {categories.map((category, index) => (
+            <option key={index} value={category}>
+              {category}
+            </option>
+          ))}
+        </select>
+
         <button
           onClick={handleUpdateQuestion}
           className="px-4 py-2 bg-purple-600 text-white rounded hover:bg-purple-700"
