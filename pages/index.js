@@ -15,9 +15,11 @@ export default function Home() {
     answerHistory,
     selectedCategory,
     filteredQuestions,
+    saveScore,
+    leaderboard,
   } = useContext(QuizContext);
 
-  const currentQ = filteredQuestions[currentQuestion];
+  const currentQ = filteredQuestions[currentQuestion] || {};
 
   const [nameInput, setNameInput] = useState("");
   const [category, setCategory] = useState("All");
@@ -34,9 +36,10 @@ export default function Home() {
   // If quiz is not started
   if (!isQuizStarted) {
     return (
-      <div>
+      <div className="min-h-screen flex flex-col items-center mt-40">
         <h1>Welcome to quiz master!</h1>
         <form
+          className="flex flex-col gap-2"
           onSubmit={(e) => {
             e.preventDefault();
             if (nameInput.trim()) {
@@ -48,20 +51,20 @@ export default function Home() {
           <select
             onChange={(e) => setCategory(e.target.value)}
             value={category}
-            className="p-2"
-            defaultValue="All categories"
+            className="p-2 border border-gray-300 w-56 rounded-md"
+            defaultValue="All"
             required
           >
-            <option value="All categories">All categories</option>
+            <option value="All">All categories</option>
             <option value="Geography">Geography</option>
             <option value="Sports">Sports</option>
             <option value="Movie">Movie</option>
             <option value="Science">Science</option>
           </select>
-          <label>Enter name to start :D</label>
+          <label>Enter name to start 😁</label>
 
           <input
-            className="border border-slate-500 p-2"
+            className="border border-slate-300 p-2 w-56 rounded-md"
             placeholder="Enter name..."
             type="text"
             value={nameInput}
@@ -83,19 +86,18 @@ export default function Home() {
   //If quiz is finished
   if (isQuizFinished) {
     return (
-      <div>
+      <div className="min-h-screen flex flex-col items-center  mt-40 gap-5">
         <h1>End of quiz</h1>
         <p>Points: {currentScore} </p>
         <p>Result:</p>
         {answerHistory.map((answer, index) => {
           return (
-            <div key={index}>
+            <div key={index} className="flex flex-col items-center">
               <p>Q: {answer.question} </p>{" "}
               <p
                 className={answer.isCorrect ? "text-green-500" : "text-red-500"}
               >
-                Your answer:
-                {answer.selected}
+                Your answer: {answer.selected}
               </p>
               {!answer.isCorrect && (
                 <p>Correct Answer: {answer.correctAnswer}</p>
@@ -111,30 +113,31 @@ export default function Home() {
   }
   // Get the quiz
   return (
-    <div>
+    <div className="min-h-screen flex flex-col items-center mt-40">
       <div className="flex items-center justify-between">
         <h2>Question {currentQuestion + 1}:</h2>
-        <p>{currentQ.category}</p>
+        <p>{currentQ?.category || "Unknown Category"}</p>
       </div>
-
       <p>{currentQ.question}</p>
-      {currentQ.option.map((opt, index) => (
-        <button
-          className={`border border-slate-500 my-2 p-2 ${
-            isAnswerSelected
-              ? opt === currentQ.answer
-                ? "bg-green-500 text-white"
-                : opt === answerHistory[answerHistory.length - 1]?.selected
-                ? "bg-red-500 text-white"
+      <div className="grid grid-cols-2 gap-2 w-96  ">
+        {currentQ.option.map((opt, index) => (
+          <button
+            className={` border border-slate-500   m-0 p-2 ${
+              isAnswerSelected
+                ? opt === currentQ.answer
+                  ? "bg-green-500 text-white"
+                  : opt === answerHistory[answerHistory.length - 1]?.selected
+                  ? "bg-red-500 text-white"
+                  : ""
                 : ""
-              : ""
-          }`}
-          key={index}
-          onClick={() => handleAnswer(opt)}
-        >
-          {opt}
-        </button>
-      ))}
+            }`}
+            key={index}
+            onClick={() => handleAnswer(opt)}
+          >
+            {opt}
+          </button>
+        ))}
+      </div>
     </div>
   );
 }

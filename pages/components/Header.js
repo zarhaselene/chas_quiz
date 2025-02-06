@@ -43,7 +43,7 @@ export default function Header() {
                 Practice
               </a>
               <a
-                href="#"
+                href="/leaderboard"
                 className="text-gray-600 hover:text-purple-600 font-medium flex items-center gap-1"
               >
                 <Trophy className="w-4 h-4" />
@@ -104,7 +104,7 @@ export default function Header() {
                   Practice
                 </a>
                 <a
-                  href="#"
+                  href="/leaderboard"
                   className="text-gray-600 hover:text-purple-600 font-medium px-2 py-1 flex items-center gap-1"
                 >
                   <Trophy className="w-4 h-4" />

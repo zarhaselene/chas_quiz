@@ -8,6 +8,7 @@ export default function App({Component, pageProps}) {
     <QuizProvider>
       <Header />
       <Component {...pageProps} />
+      <Footer />
     </QuizProvider>
   );
 }

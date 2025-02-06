@@ -1,11 +1,11 @@
-import {createContext, useState, useEffect, use} from "react";
+import {createContext, useState, useEffect} from "react";
 
 const QuizContext = createContext();
 
 /*
-TODO torsdag:
-- score / highscore - localStorage
-- admin
+TODO fredag:
+- olika leaderboards för kategori och att högsta highscore sparas för en användare
+- spara nya quiz till localstorage och lägga till kategori i admin
 - design
 
 */
@@ -65,7 +65,54 @@ export function QuizProvider({children}) {
   const [isAnswerSelected, setIsAnswerSelected] = useState(false);
   const [answerHistory, setAnswerHistory] = useState([]);
   const [selectedCategory, setSelectedCategory] = useState("All");
-  const [filteredQuestions, setFilteredQuestions] = useState([questions]);
+  const [filteredQuestions, setFilteredQuestions] = useState(questions);
+  const [leaderboard, setLeaderboard] = useState([]);
+
+  useEffect(() => {
+    // Load leaderboard from localStorage on initial load
+    const storedLeaderboard = localStorage.getItem("leaderboard");
+    if (storedLeaderboard) {
+      setLeaderboard(JSON.parse(storedLeaderboard));
+    }
+  }, []);
+
+  // save score and time to leaderboard
+  const saveScore = (playerName, score) => {
+    if (!playerName) return;
+
+    const currentDate = new Date().toLocaleString("en-SE", {
+      timeZone: "Europe/Stockholm",
+    });
+
+    const newEntry = {name: playerName, score, date: currentDate};
+
+    setLeaderboard((prevLeaderboard) => {
+      const existingPlayerIndex = prevLeaderboard.findIndex(
+        (entry) => entry.name === playerName
+      );
+      if (existingPlayerIndex !== -1) {
+        const updatedLeaderboard = prevLeaderboard.map((entry, index) => {
+          if (index === existingPlayerIndex) {
+            return {...entry, score, currentDate};
+          }
+          return entry;
+        });
+        return updatedLeaderboard
+          .sort((a, b) => b.score - a.score)
+          .slice(0, 10);
+      } else {
+        const newEntry = {name: playerName, score, currentDate};
+        return [...prevLeaderboard, newEntry]
+          .sort((a, b) => b.score - a.score)
+          .slice(0, 10);
+      }
+    });
+  };
+
+  // Store leaderboard in localStorage whenever it changes
+  useEffect(() => {
+    localStorage.setItem("leaderboard", JSON.stringify(leaderboard));
+  }, [leaderboard]);
 
   const startQuiz = (name, category) => {
     setPlayerName(name);
@@ -91,7 +138,7 @@ export function QuizProvider({children}) {
     setIsAnswerSelected(true);
     setUserAnswer(option);
 
-    const correct = option === questions[currentQuestion].answer;
+    const correct = option === filteredQuestions[currentQuestion].answer;
 
     if (correct) {
       setCurrentScore((prevScore) => prevScore + 1);
@@ -99,9 +146,9 @@ export function QuizProvider({children}) {
     setAnswerHistory((prev) => [
       ...prev,
       {
-        question: questions[currentQuestion].question,
+        question: filteredQuestions[currentQuestion].question,
         selected: option,
-        correctAnswer: questions[currentQuestion].answer,
+        correctAnswer: filteredQuestions[currentQuestion].answer,
         isCorrect: correct,
       },
     ]);
@@ -118,8 +165,21 @@ export function QuizProvider({children}) {
       setCurrentQuestion((prev) => prev + 1);
     } else {
       setIsQuizFinished(true);
+
+      if (saveScore && playerName) {
+        saveScore(playerName, currentScore);
+      } else {
+        console.log("error");
+      }
     }
   };
+
+  useEffect(() => {
+    if (isQuizFinished && playerName && currentScore !== undefined) {
+      saveScore(playerName, currentScore);
+    }
+  }, [isQuizFinished, currentScore, playerName]);
+
   // Restart Quiz
   const restartQuiz = () => {
     setCurrentScore(0);
@@ -129,6 +189,7 @@ export function QuizProvider({children}) {
     setIsQuizStarted(false);
     setIsQuizFinished(false);
     setSelectedCategory("All");
+    setAnswerHistory([]);
   };
   // Add new question
   const addQuestion = (newQuestion) => {
@@ -172,6 +233,8 @@ export function QuizProvider({children}) {
         isAnswerSelected,
         selectedCategory,
         filteredQuestions,
+        saveScore,
+        leaderboard,
       }}
     >
       {children}
