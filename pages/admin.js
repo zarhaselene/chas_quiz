@@ -13,12 +13,14 @@ export default function Admin() {
   const [newQuestion, setNewQuestion] = useState(""); // Frågetext
   const [newOptions, setNewOptions] = useState(["", "", "", ""]); // Alternativ till fråga
   const [newAnswer, setNewAnswer] = useState(""); // Rätt svar
+  const [newCategory, setNewCategory] = useState(""); // Kategori
 
   // För att hantera inputvärden för att uppdatera en fråga
   const [updateQuestionId, setUpdateQuestionId] = useState(""); // Id för den fråga som ska uppdateras
   const [updateQuestionText, setUpdateQuestionText] = useState(""); // Ny frågetext
   const [updateOptions, setUpdateOptions] = useState(["", "", "", ""]); // Uppdaterade alternativ
   const [updateAnswer, setUpdateAnswer] = useState(""); // Uppdaterat rätt svar
+  const [updateCategory, setUpdateCategory] = useState(""); // Uppdaterad kategori
 
   // Funktion för att lägga till en ny fråga
   const handleAddQuestion = () => {
@@ -27,20 +29,23 @@ export default function Admin() {
       question: newQuestion,
       option: newOptions,
       answer: newAnswer,
+      category: newCategory,
     });
 
     // Rensar inputfält efter tillägg
     setNewQuestion("");
     setNewOptions(["", "", "", ""]);
     setNewAnswer("");
+    setNewCategory("");
   };
 
-  // Funktion för att uppdatera en befintlig fråga
+  // Funktion för att uppdatera en fråga
   const handleUpdateQuestion = () => {
     updateQuestion(parseInt(updateQuestionId, 10), {
       question: updateQuestionText,
       option: updateOptions,
       answer: updateAnswer,
+      category: updateCategory,
     });
 
     // Rensar inputfält efter uppdatering
@@ -48,6 +53,7 @@ export default function Admin() {
     setUpdateQuestionText("");
     setUpdateOptions(["", "", "", ""]);
     setUpdateAnswer("");
+    setUpdateCategory("");
   };
 
   // Funktion för att ta bort en fråga
@@ -55,12 +61,15 @@ export default function Admin() {
     removeQuestion(id);
   };
 
-  // Renderar admin-gränssnittet för att hantera frågor
+  // Render the admin UI to manage questions
   return (
     <div className="container mx-auto p-4">
-      <h1 className="text-2xl font-bold mb-4">Admin Page</h1>
+      {/* Admin Page Header with gradient text */}
+      <h1 className="text-2xl font-bold mb-4 bg-gradient-to-r from-purple-600 to-blue-500 bg-clip-text text-transparent">
+        Admin Page
+      </h1>
 
-      {/* Sektion för att lägga till en ny fråga */}
+      {/* Section to add a new question */}
       <div className="mb-8">
         <h2 className="text-xl font-semibold mb-2">Add New Question</h2>
         <input
@@ -93,15 +102,22 @@ export default function Admin() {
           onChange={(e) => setNewAnswer(e.target.value)}
           className="block w-full p-2 mb-2 border rounded"
         />
+        <input
+          type="text"
+          placeholder="Category"
+          value={newCategory}
+          onChange={(e) => setNewCategory(e.target.value)}
+          className="block w-full p-2 mb-2 border rounded"
+        />
         <button
           onClick={handleAddQuestion}
-          className="px-4 py-2 bg-blue-600 text-white rounded hover:bg-blue-700"
+          className="px-4 py-2 bg-purple-600 text-white rounded hover:bg-purple-700"
         >
           Add Question
         </button>
       </div>
 
-      {/* Sektion för att uppdatera en befintlig fråga */}
+      {/* Section to update an existing question */}
       <div className="mb-8">
         <h2 className="text-xl font-semibold mb-2">Update Question</h2>
         <input
@@ -141,15 +157,22 @@ export default function Admin() {
           onChange={(e) => setUpdateAnswer(e.target.value)}
           className="block w-full p-2 mb-2 border rounded"
         />
+        <input
+          type="text"
+          placeholder="Category"
+          value={updateCategory}
+          onChange={(e) => setUpdateCategory(e.target.value)}
+          className="block w-full p-2 mb-2 border rounded"
+        />
         <button
           onClick={handleUpdateQuestion}
-          className="px-4 py-2 bg-green-600 text-white rounded hover:bg-green-700"
+          className="px-4 py-2 bg-purple-600 text-white rounded hover:bg-purple-700"
         >
           Update Question
         </button>
       </div>
 
-      {/* Sektion för att visa och ta bort alla frågor */}
+      {/* Section to display and remove all questions */}
       <div>
         <h3 className="text-xl font-semibold mb-2">Current Questions:</h3>
         {questions.length === 0 ? (
@@ -159,6 +182,7 @@ export default function Admin() {
             <div key={question.id} className="mb-4 p-4 border rounded">
               <h4 className="font-semibold">{question.question}</h4>
               <p>Options: {question.option.join(", ")}</p>
+              <p>Category: {question.category}</p>
               <button
                 onClick={() => handleRemoveQuestion(question.id)}
                 className="px-4 py-2 bg-red-600 text-white rounded hover:bg-red-700"
