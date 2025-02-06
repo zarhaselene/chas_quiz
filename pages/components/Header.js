@@ -1,6 +1,7 @@
 import React from "react";
 import { Brain, Trophy, User, Search, Menu } from "lucide-react";
 import { useState } from "react";
+import Link from 'next/link'; 
 
 export default function Header() {
   const [isOpen, setIsOpen] = useState(false);
@@ -44,6 +45,11 @@ export default function Header() {
                 <Trophy className="w-4 h-4" />
                 Leaderboard
               </a>
+              <Link href="/admin" legacyBehavior>
+                <a className="text-gray-600 hover:text-purple-600 font-medium flex items-center gap-1">
+                  Admin
+                </a>
+              </Link>
             </div>
 
             {/* Right side buttons */}
@@ -100,6 +106,11 @@ export default function Header() {
                   <Trophy className="w-4 h-4" />
                   Leaderboard
                 </a>
+                <Link href="/admin" legacyBehavior>
+                  <a className="text-gray-600 hover:text-purple-600 font-medium px-2 py-1 flex items-center gap-1">
+                    Admin
+                  </a>
+                </Link>
                 <div className="border-t border-gray-100 pt-4 flex flex-col gap-2">
                   <button className="px-4 py-2 text-gray-600 hover:text-purple-600 rounded-full hover:bg-purple-50 flex items-center gap-2">
                     <User className="w-5 h-5" />
