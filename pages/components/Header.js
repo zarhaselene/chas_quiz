@@ -1,7 +1,7 @@
 import React from "react";
-import { Brain, Trophy, User, Search, Menu } from "lucide-react";
-import { useState } from "react";
-import Link from 'next/link'; 
+import {Brain, Trophy, User, Search, Menu} from "lucide-react";
+import {useState} from "react";
+import Link from "next/link";
 
 export default function Header() {
   const [isOpen, setIsOpen] = useState(false);
@@ -12,16 +12,20 @@ export default function Header() {
           <div className="flex justify-between items-center h-16">
             {/* Logo and Brand */}
             <div className="flex items-center gap-2">
-              <Brain className="w-8 h-8 text-purple-600" />
-              <span className="text-xl font-bold bg-gradient-to-r from-purple-600 to-blue-500 text-transparent bg-clip-text">
-                QuizMaster
-              </span>
+              <Link href="/" passHref>
+                <div className="flex items-center gap-2 cursor-pointer">
+                  <Brain className="w-8 h-8 text-purple-600" />
+                  <span className="text-xl font-bold bg-gradient-to-r from-purple-600 to-blue-500 text-transparent bg-clip-text">
+                    QuizMaster
+                  </span>
+                </div>
+              </Link>
             </div>
 
             {/* Desktop Navigation */}
             <div className="hidden md:flex items-center gap-8">
               <a
-                href="#"
+                href="/"
                 className="text-gray-600 hover:text-purple-600 font-medium"
               >
                 Home
@@ -82,7 +86,7 @@ export default function Header() {
             <div className="md:hidden py-4 border-t border-gray-100">
               <div className="flex flex-col gap-4">
                 <a
-                  href="#"
+                  href="/"
                   className="text-gray-600 hover:text-purple-600 font-medium px-2 py-1"
                 >
                   Home

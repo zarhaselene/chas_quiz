@@ -1,4 +1,4 @@
-import { useContext, useState } from "react";
+import {useContext, useState} from "react";
 import QuizContext from "./context/QuizContext";
 
 export default function Home() {
@@ -13,17 +13,20 @@ export default function Home() {
     currentScore,
     isAnswerSelected,
     answerHistory,
+    selectedCategory,
+    filteredQuestions,
   } = useContext(QuizContext);
 
-  const currentQ = questions[currentQuestion];
+  const currentQ = filteredQuestions[currentQuestion];
 
   const [nameInput, setNameInput] = useState("");
+  const [category, setCategory] = useState("All");
 
   const handleKeyDown = (e) => {
     if (e.key === "Enter") {
       e.preventDefault();
       if (nameInput.trim()) {
-        startQuiz(nameInput);
+        startQuiz(nameInput, category);
       }
     }
   };
@@ -33,25 +36,47 @@ export default function Home() {
     return (
       <div>
         <h1>Welcome to quiz master!</h1>
-        <label>Enter name to start :D</label>
-        <input
-          className="border border-slate-500 p-2"
-          placeholder="Enter name..."
-          type="text"
-          value={nameInput}
-          onChange={(e) => setNameInput(e.target.value)}
-          onKeyDown={handleKeyDown}
-        />
-        <button
-          onClick={() => {
-            startQuiz(nameInput);
-            console.log("isQuizStarted: ", isQuizStarted);
-            setNameInput("");
+        <form
+          onSubmit={(e) => {
+            e.preventDefault();
+            if (nameInput.trim()) {
+              startQuiz(nameInput, category);
+              setNameInput("");
+            }
           }}
-          className="border border-slate-500 p-2 bg-green-500 text-white w-24"
         >
-          Start
-        </button>
+          <select
+            onChange={(e) => setCategory(e.target.value)}
+            value={category}
+            className="p-2"
+            defaultValue="All categories"
+            required
+          >
+            <option value="All categories">All categories</option>
+            <option value="Geography">Geography</option>
+            <option value="Sports">Sports</option>
+            <option value="Movie">Movie</option>
+            <option value="Science">Science</option>
+          </select>
+          <label>Enter name to start :D</label>
+
+          <input
+            className="border border-slate-500 p-2"
+            placeholder="Enter name..."
+            type="text"
+            value={nameInput}
+            onChange={(e) => setNameInput(e.target.value)}
+            onKeyDown={handleKeyDown}
+            required
+          />
+
+          <button
+            type="submit"
+            className="border border-slate-500 p-2 bg-green-500 text-white w-24"
+          >
+            Start
+          </button>
+        </form>
       </div>
     );
   }
@@ -78,14 +103,20 @@ export default function Home() {
             </div>
           );
         })}
-        <button className="border p-2" onClick={restartQuiz}>Play again</button>
+        <button className="border p-2" onClick={restartQuiz}>
+          Play again
+        </button>
       </div>
     );
   }
   // Get the quiz
   return (
     <div>
-      <h2>Question {currentQuestion + 1}:</h2>
+      <div className="flex items-center justify-between">
+        <h2>Question {currentQuestion + 1}:</h2>
+        <p>{currentQ.category}</p>
+      </div>
+
       <p>{currentQ.question}</p>
       {currentQ.option.map((opt, index) => (
         <button

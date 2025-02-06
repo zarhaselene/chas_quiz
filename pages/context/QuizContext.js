@@ -1,29 +1,58 @@
-import { createContext, useState, useEffect, use } from "react";
+import {createContext, useState, useEffect, use} from "react";
 
 const QuizContext = createContext();
 
 /*
 TODO torsdag:
-- highscore - localStorage
-- kategorier (tags)
+- score / highscore - localStorage
 - admin
 - design
 
 */
 
-export function QuizProvider({ children }) {
+export function QuizProvider({children}) {
   const [questions, setQuestions] = useState([
     {
       id: 1,
       question: "The captial city of Spain?",
       option: ["Stockholm", "Madrid", "Santiago", "Malmo"],
       answer: "Madrid",
+      category: "Geography",
     },
     {
       id: 2,
       question: "The captial city of Sweden?",
       option: ["Stockholm", "Madrid", "Santiago", "Malmo"],
       answer: "Stockholm",
+      category: "Geography",
+    },
+    {
+      id: 3,
+      question: "Who played the joker in The dark knight?",
+      option: ["Bruce Lee", "Eddie Murphy", "Julia Roberts", "Heath Ledger"],
+      answer: "Heath Ledger",
+      category: "Movie",
+    },
+    {
+      id: 4,
+      question: "How tall is Zlatan Ibrahimovic?",
+      option: ["190cm", "188cm", "199cm", "195cm"],
+      answer: "195cm",
+      category: "Sports",
+    },
+    {
+      id: 5,
+      question: "How many Ballon d'Or awards has Cristiano Ronaldo won?",
+      option: ["5", "7", "3", "8"],
+      answer: "5",
+      category: "Sports",
+    },
+    {
+      id: 6,
+      question: "The boiling point of water?",
+      option: ["50 celsius", "70 celsius", "95 celsius", "100 celsius"],
+      answer: "100 celsius",
+      category: "Science",
     },
   ]);
 
@@ -35,14 +64,24 @@ export function QuizProvider({ children }) {
   const [isQuizFinished, setIsQuizFinished] = useState(false);
   const [isAnswerSelected, setIsAnswerSelected] = useState(false);
   const [answerHistory, setAnswerHistory] = useState([]);
+  const [selectedCategory, setSelectedCategory] = useState("All");
+  const [filteredQuestions, setFilteredQuestions] = useState([questions]);
 
-  const startQuiz = (name) => {
+  const startQuiz = (name, category) => {
     setPlayerName(name);
     setIsQuizStarted(true);
     setIsQuizFinished(false);
     setCurrentScore(0);
     setCurrentQuestion(0);
     setUserAnswer(null);
+    setSelectedCategory(category);
+
+    // Filter by category
+    let newFilteredQuestions =
+      category === "All"
+        ? questions
+        : questions.filter((q) => q.category === category);
+    setFilteredQuestions(newFilteredQuestions);
   };
 
   // Handle answer
@@ -71,11 +110,11 @@ export function QuizProvider({ children }) {
     setTimeout(() => {
       nextQuestion();
       setIsAnswerSelected(false);
-    }, 2000);
+    }, 1000);
   };
   // Next question
   const nextQuestion = () => {
-    if (currentQuestion + 1 < questions.length) {
+    if (currentQuestion + 1 < filteredQuestions.length) {
       setCurrentQuestion((prev) => prev + 1);
     } else {
       setIsQuizFinished(true);
@@ -89,6 +128,7 @@ export function QuizProvider({ children }) {
     setUserAnswer(null);
     setIsQuizStarted(false);
     setIsQuizFinished(false);
+    setSelectedCategory("All");
   };
   // Add new question
   const addQuestion = (newQuestion) => {
@@ -107,7 +147,7 @@ export function QuizProvider({ children }) {
   // Update question
   const updateQuestion = (id, updateQuestion) => {
     setQuestions((prevQuestions) =>
-      prevQuestions.map((q) => (q.id === id ? { ...q, ...updateQuestion } : q))
+      prevQuestions.map((q) => (q.id === id ? {...q, ...updateQuestion} : q))
     );
   };
 
@@ -130,6 +170,8 @@ export function QuizProvider({ children }) {
         isQuizFinished,
         answerHistory,
         isAnswerSelected,
+        selectedCategory,
+        filteredQuestions,
       }}
     >
       {children}
