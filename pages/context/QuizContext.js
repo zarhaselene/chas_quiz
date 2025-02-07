@@ -5,32 +5,34 @@ const QuizContext = createContext();
 
 export function QuizProvider({children}) {
   // Default questions to be used if no questions exist in localStorage
-  const defaultQuestions = [
-    // Question objects here...
-  ];
+  const defaultQuestions = [];
 
   // State to hold the list of questions
   const [questions, setQuestions] = useState([]);
 
-  // Load questions from localStorage or use default questions if not found
   useEffect(() => {
     if (typeof window !== "undefined") {
-      // Retrieve stored questions from localStorage or default to empty array
       const storedQuestions = JSON.parse(
         localStorage.getItem("questions") || []
       );
 
+      const initializedDefaultQuestions = defaultQuestions.map((q, index) => ({
+        ...q,
+        id: index + 1,
+      }));
+
       // Merge default and stored questions, ensuring no duplicates
-      const mergedQuestions = [...defaultQuestions, ...storedQuestions].reduce(
-        (acc, curr) => {
-          if (!acc.find((q) => q.question === curr.question)) {
-            acc.push(curr); // Add unique questions to accumulator
-          }
-          return acc;
-        },
-        []
-      );
+      const mergedQuestions = [
+        ...initializedDefaultQuestions,
+        ...storedQuestions,
+      ].reduce((acc, curr) => {
+        if (!acc.find((q) => q.question === curr.question)) {
+          acc.push(curr); // Add unique questions to accumulator
+        }
+        return acc;
+      }, []);
       setQuestions(mergedQuestions); // Update state with merged questions
+      localStorage.setItem("questions", JSON.stringify(mergedQuestions)); // Store merged questions
     }
   }, []);
 
@@ -200,10 +202,15 @@ export function QuizProvider({children}) {
   };
 
   // Update an existing question
-  const updateQuestion = (id, updateQuestion) => {
-    setQuestions((prevQuestions) =>
-      prevQuestions.map((q) => (q.id === id ? {...q, ...updateQuestion} : q))
-    );
+  const updateQuestion = (id, updatedQuestion) => {
+    setQuestions((prevQuestions) => {
+      const updatedQuestions = prevQuestions.map((q) =>
+        q.id === id ? {...q, ...updatedQuestion} : q
+      );
+
+      localStorage.setItem("questions", JSON.stringify(updatedQuestions)); // Save changes
+      return updatedQuestions;
+    });
   };
 
   return (

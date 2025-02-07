@@ -162,7 +162,7 @@ export default function Home() {
   }
   // Get the quiz
   return (
-    <div className="min-h-screen flex flex-col items-center justify-center py-10 px-4 bg-gray-100">
+    <div className="min-h-screen flex flex-col items-center justify-center py-10 px-4 bg-gray-50">
       <div className="bg-white shadow-lg rounded-xl p-6 max-w-2xl w-full space-y-6">
         {/* Question Number & Category */}
         <div className="flex justify-between items-center">

@@ -33,7 +33,7 @@ export default function Leaderboard() {
           {Object.entries(leaderboards).map(([category, entries]) => (
             <div
               key={category}
-              className="bg-b rounded-xl shadow-md overflow-hidden "
+              className="bg-b rounded-xl shadow-md overflow-hidden"
             >
               <div className="border-b bg-gray-50 px-6 py-4 bg-gradient-to-r from-purple-600 to-blue-500 text-transparent">
                 <h2 className="text-xl font-semibold text-white">{category}</h2>
