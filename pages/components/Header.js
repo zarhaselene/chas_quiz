@@ -1,10 +1,11 @@
 import React from "react";
-import {Brain, Trophy, User, Search, Menu} from "lucide-react";
+import {Brain, Trophy, User, Search, Menu, X} from "lucide-react";
 import {useState} from "react";
 import Link from "next/link";
 
 export default function Header() {
   const [isOpen, setIsOpen] = useState(false);
+
   return (
     <div>
       <nav className="bg-white shadow-sm border-b border-gray-100">
@@ -30,18 +31,18 @@ export default function Header() {
               >
                 Home
               </a>
-              <a
+              {/* <a
                 href="#"
                 className="text-gray-600 hover:text-purple-600 font-medium"
               >
                 Categories
-              </a>
-              <a
+              </a> */}
+              {/* <a
                 href="#"
                 className="text-gray-600 hover:text-purple-600 font-medium"
               >
                 Practice
-              </a>
+              </a> */}
               <a
                 href="/leaderboard"
                 className="text-gray-600 hover:text-purple-600 font-medium flex items-center gap-1"
@@ -58,15 +59,15 @@ export default function Header() {
 
             {/* Right side buttons */}
             <div className="hidden md:flex items-center gap-4">
-              <button className="p-2 text-gray-600 hover:text-purple-600 rounded-full hover:bg-purple-50">
+              {/* <button className="p-2 text-gray-600 hover:text-purple-600 rounded-full hover:bg-purple-50">
                 <Search className="w-5 h-5" />
               </button>
               <button className="px-4 py-2 text-gray-600 hover:text-purple-600 rounded-full hover:bg-purple-50 flex items-center gap-2">
                 <User className="w-5 h-5" />
                 Sign In
-              </button>
+              </button> */}
               <button className="px-4 py-2 bg-purple-600 text-white rounded-full hover:bg-purple-700 font-medium">
-                Start Quiz
+                <Link href="/">Start Quiz</Link>
               </button>
             </div>
 
@@ -76,7 +77,11 @@ export default function Header() {
                 onClick={() => setIsOpen(!isOpen)}
                 className="p-2 text-gray-600 hover:text-purple-600 rounded-lg hover:bg-purple-50"
               >
-                <Menu className="w-6 h-6" />
+                {isOpen ? (
+                  <X className="w-6 h-6" />
+                ) : (
+                  <Menu className="w-6 h-6" />
+                )}
               </button>
             </div>
           </div>
@@ -91,18 +96,18 @@ export default function Header() {
                 >
                   Home
                 </a>
-                <a
+                {/* <a
                   href="#"
                   className="text-gray-600 hover:text-purple-600 font-medium px-2 py-1"
                 >
                   Categories
-                </a>
-                <a
+                </a> */}
+                {/* <a
                   href="#"
                   className="text-gray-600 hover:text-purple-600 font-medium px-2 py-1"
                 >
                   Practice
-                </a>
+                </a> */}
                 <a
                   href="/leaderboard"
                   className="text-gray-600 hover:text-purple-600 font-medium px-2 py-1 flex items-center gap-1"
@@ -116,12 +121,12 @@ export default function Header() {
                   </a>
                 </Link>
                 <div className="border-t border-gray-100 pt-4 flex flex-col gap-2">
-                  <button className="px-4 py-2 text-gray-600 hover:text-purple-600 rounded-full hover:bg-purple-50 flex items-center gap-2">
+                  {/* <button className="px-4 py-2 text-gray-600 hover:text-purple-600 rounded-full hover:bg-purple-50 flex items-center gap-2">
                     <User className="w-5 h-5" />
                     Sign In
-                  </button>
+                  </button> */}
                   <button className="px-4 py-2 bg-purple-600 text-white rounded-full hover:bg-purple-700 font-medium">
-                    Start Quiz
+                    <Link href="/">Start Quiz</Link>
                   </button>
                 </div>
               </div>

@@ -15,7 +15,9 @@ const Footer = () => {
             <div className="col-span-2 md:col-span-1 mb-4 md:mb-0">
               <div className="flex items-center gap-2 mb-2">
                 <Brain className="w-5 h-5 text-purple-600" />
-                <span className="text-lg font-bold">QuizMaster</span>
+                <span className="text-xl font-bold bg-gradient-to-r from-purple-600 to-blue-500 text-transparent bg-clip-text">
+                  QuizMaster
+                </span>
               </div>
               <div className="flex space-x-4 mt-2">
                 <a href="#" className="text-gray-400 hover:text-purple-600">
@@ -32,20 +34,21 @@ const Footer = () => {
 
             {/* Quick Links */}
             <div className="text-sm">
-              <h3 className="font-semibold mb-2">Quick Links</h3>
+              <h3 className="font-bold bg-gradient-to-r from-purple-600 to-blue-500 text-transparent bg-clip-text">
+                Quick Links
+              </h3>
               <ul className="space-y-1">
                 <li>
                   <a href="#" className="text-gray-600 hover:text-purple-600">
                     Home
                   </a>
                 </li>
+
                 <li>
-                  <a href="#" className="text-gray-600 hover:text-purple-600">
-                    Popular Quizzes
-                  </a>
-                </li>
-                <li>
-                  <a href="#" className="text-gray-600 hover:text-purple-600">
+                  <a
+                    href="/leaderboard"
+                    className="text-gray-600 hover:text-purple-600"
+                  >
                     Leaderboard
                   </a>
                 </li>
@@ -54,7 +57,9 @@ const Footer = () => {
 
             {/* Support */}
             <div className="text-sm">
-              <h3 className="font-semibold mb-2">Support</h3>
+              <h3 className="font-bold bg-gradient-to-r from-purple-600 to-blue-500 text-transparent bg-clip-text">
+                Support
+              </h3>
               <ul className="space-y-1">
                 <li>
                   <a href="#" className="text-gray-600 hover:text-purple-600">
@@ -76,7 +81,9 @@ const Footer = () => {
 
             {/* Contact - Hidden on mobile */}
             <div className="text-sm hidden md:block">
-              <h3 className="font-semibold mb-2">Contact</h3>
+              <h3 className="font-bold bg-gradient-to-r from-purple-600 to-blue-500 text-transparent bg-clip-text">
+                Contact
+              </h3>
               <p className="text-gray-600">support@quizmaster.com</p>
             </div>
           </div>

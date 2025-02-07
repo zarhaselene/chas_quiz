@@ -1,61 +1,47 @@
 import {createContext, useState, useEffect} from "react";
 
+// Create context to share quiz data across components
 const QuizContext = createContext();
 
-/*
-TODO fredag:
-- olika leaderboards för kategori och att högsta highscore sparas för en användare
-- spara nya quiz till localstorage och lägga till kategori i admin
-- design
-
-*/
-
 export function QuizProvider({children}) {
-  const [questions, setQuestions] = useState([
-    {
-      id: 1,
-      question: "The captial city of Spain?",
-      option: ["Stockholm", "Madrid", "Santiago", "Malmo"],
-      answer: "Madrid",
-      category: "Geography",
-    },
-    {
-      id: 2,
-      question: "The captial city of Sweden?",
-      option: ["Stockholm", "Madrid", "Santiago", "Malmo"],
-      answer: "Stockholm",
-      category: "Geography",
-    },
-    {
-      id: 3,
-      question: "Who played the joker in The dark knight?",
-      option: ["Bruce Lee", "Eddie Murphy", "Julia Roberts", "Heath Ledger"],
-      answer: "Heath Ledger",
-      category: "Movie",
-    },
-    {
-      id: 4,
-      question: "How tall is Zlatan Ibrahimovic?",
-      option: ["190cm", "188cm", "199cm", "195cm"],
-      answer: "195cm",
-      category: "Sports",
-    },
-    {
-      id: 5,
-      question: "How many Ballon d'Or awards has Cristiano Ronaldo won?",
-      option: ["5", "7", "3", "8"],
-      answer: "5",
-      category: "Sports",
-    },
-    {
-      id: 6,
-      question: "The boiling point of water?",
-      option: ["50 celsius", "70 celsius", "95 celsius", "100 celsius"],
-      answer: "100 celsius",
-      category: "Science",
-    },
-  ]);
+  // Default questions to be used if no questions exist in localStorage
+  const defaultQuestions = [
+    // Question objects here...
+  ];
 
+  // State to hold the list of questions
+  const [questions, setQuestions] = useState([]);
+
+  // Load questions from localStorage or use default questions if not found
+  useEffect(() => {
+    if (typeof window !== "undefined") {
+      // Retrieve stored questions from localStorage or default to empty array
+      const storedQuestions = JSON.parse(
+        localStorage.getItem("questions") || []
+      );
+
+      // Merge default and stored questions, ensuring no duplicates
+      const mergedQuestions = [...defaultQuestions, ...storedQuestions].reduce(
+        (acc, curr) => {
+          if (!acc.find((q) => q.question === curr.question)) {
+            acc.push(curr); // Add unique questions to accumulator
+          }
+          return acc;
+        },
+        []
+      );
+      setQuestions(mergedQuestions); // Update state with merged questions
+    }
+  }, []);
+
+  // Save questions back to localStorage whenever they change
+  useEffect(() => {
+    if (typeof window !== "undefined" && questions.length > 0) {
+      localStorage.setItem("questions", JSON.stringify(questions)); // Save questions to localStorage
+    }
+  }, [questions]);
+
+  // States for tracking quiz progress and data
   const [currentScore, setCurrentScore] = useState(0);
   const [playerName, setPlayerName] = useState("");
   const [userAnswer, setUserAnswer] = useState(null);
@@ -66,54 +52,57 @@ export function QuizProvider({children}) {
   const [answerHistory, setAnswerHistory] = useState([]);
   const [selectedCategory, setSelectedCategory] = useState("All");
   const [filteredQuestions, setFilteredQuestions] = useState(questions);
-  const [leaderboard, setLeaderboard] = useState([]);
+  const [leaderboards, setLeaderboards] = useState({});
 
+  // Load leaderboards from localStorage on initial load
   useEffect(() => {
-    // Load leaderboard from localStorage on initial load
-    const storedLeaderboard = localStorage.getItem("leaderboard");
-    if (storedLeaderboard) {
-      setLeaderboard(JSON.parse(storedLeaderboard));
+    const storedLeaderboards = localStorage.getItem("leaderboards");
+    if (storedLeaderboards) {
+      setLeaderboards(JSON.parse(storedLeaderboards)); // Update leaderboards state
     }
   }, []);
 
-  // save score and time to leaderboard
-  const saveScore = (playerName, score) => {
+  // Save score to leaderboards in localStorage
+  const saveScore = (playerName, score, category) => {
     if (!playerName) return;
 
     const currentDate = new Date().toLocaleString("en-SE", {
       timeZone: "Europe/Stockholm",
     });
-
     const newEntry = {name: playerName, score, date: currentDate};
 
-    setLeaderboard((prevLeaderboard) => {
-      const existingPlayerIndex = prevLeaderboard.findIndex(
+    // Update leaderboard for the specified category
+    setLeaderboards((prevLeaderboards) => {
+      const categoryLeaderboard = prevLeaderboards[category] || [];
+      const existingPlayerIndex = categoryLeaderboard.findIndex(
         (entry) => entry.name === playerName
       );
+
       if (existingPlayerIndex !== -1) {
-        const updatedLeaderboard = prevLeaderboard.map((entry, index) => {
-          if (index === existingPlayerIndex) {
-            return {...entry, score, currentDate};
-          }
-          return entry;
-        });
-        return updatedLeaderboard
-          .sort((a, b) => b.score - a.score)
-          .slice(0, 10);
+        // Update existing player's score if it's higher
+        if (categoryLeaderboard[existingPlayerIndex].score < score) {
+          categoryLeaderboard[existingPlayerIndex] = newEntry;
+        }
       } else {
-        const newEntry = {name: playerName, score, currentDate};
-        return [...prevLeaderboard, newEntry]
-          .sort((a, b) => b.score - a.score)
-          .slice(0, 10);
+        // Add new player to leaderboard
+        categoryLeaderboard.push(newEntry);
       }
+
+      // Sort leaderboard and keep only top 10 players
+      const sortedLeaderboard = [...categoryLeaderboard]
+        .sort((a, b) => b.score - a.score)
+        .slice(0, 10);
+
+      return {...prevLeaderboards, [category]: sortedLeaderboard};
     });
   };
 
-  // Store leaderboard in localStorage whenever it changes
+  // Store updated leaderboards in localStorage whenever they change
   useEffect(() => {
-    localStorage.setItem("leaderboard", JSON.stringify(leaderboard));
-  }, [leaderboard]);
+    localStorage.setItem("leaderboards", JSON.stringify(leaderboards)); // Save leaderboards to localStorage
+  }, [leaderboards]);
 
+  // Start the quiz with selected player name and category
   const startQuiz = (name, category) => {
     setPlayerName(name);
     setIsQuizStarted(true);
@@ -123,26 +112,27 @@ export function QuizProvider({children}) {
     setUserAnswer(null);
     setSelectedCategory(category);
 
-    // Filter by category
+    // Filter questions based on selected category
     let newFilteredQuestions =
       category === "All"
         ? questions
         : questions.filter((q) => q.category === category);
-    setFilteredQuestions(newFilteredQuestions);
+    setFilteredQuestions(newFilteredQuestions); // Update filtered questions
   };
 
-  // Handle answer
+  // Handle answer selection and update score
   const handleAnswer = (option) => {
-    if (isAnswerSelected) return;
+    if (isAnswerSelected) return; // Prevent selecting more than one answer
 
-    setIsAnswerSelected(true);
-    setUserAnswer(option);
+    setIsAnswerSelected(true); // Mark answer as selected
+    setUserAnswer(option); // Store the selected answer
 
-    const correct = option === filteredQuestions[currentQuestion].answer;
-
+    const correct = option === filteredQuestions[currentQuestion].answer; // Check if the selected answer is correct
     if (correct) {
-      setCurrentScore((prevScore) => prevScore + 1);
+      setCurrentScore((prevScore) => prevScore + 1); // Increase score if correct
     }
+
+    // Log answer history for review
     setAnswerHistory((prev) => [
       ...prev,
       {
@@ -153,34 +143,35 @@ export function QuizProvider({children}) {
       },
     ]);
 
-    //timeout
+    // Move to next question after a short delay
     setTimeout(() => {
       nextQuestion();
       setIsAnswerSelected(false);
     }, 1000);
   };
-  // Next question
+
+  // Move to the next question or finish the quiz if it's the last question
   const nextQuestion = () => {
     if (currentQuestion + 1 < filteredQuestions.length) {
       setCurrentQuestion((prev) => prev + 1);
     } else {
       setIsQuizFinished(true);
-
       if (saveScore && playerName) {
-        saveScore(playerName, currentScore);
+        saveScore(playerName, currentScore, selectedCategory);
       } else {
         console.log("error");
       }
     }
   };
 
+  // Save score after quiz finishes
   useEffect(() => {
     if (isQuizFinished && playerName && currentScore !== undefined) {
-      saveScore(playerName, currentScore);
+      saveScore(playerName, currentScore, selectedCategory);
     }
-  }, [isQuizFinished, currentScore, playerName]);
+  }, [isQuizFinished, currentScore, playerName, selectedCategory]);
 
-  // Restart Quiz
+  // Restart the quiz by resetting all states
   const restartQuiz = () => {
     setCurrentScore(0);
     setCurrentQuestion(0);
@@ -191,7 +182,8 @@ export function QuizProvider({children}) {
     setSelectedCategory("All");
     setAnswerHistory([]);
   };
-  // Add new question
+
+  // Add a new question to the quiz
   const addQuestion = (newQuestion) => {
     setQuestions((prevQuestions) => [
       ...prevQuestions,
@@ -201,11 +193,13 @@ export function QuizProvider({children}) {
       },
     ]);
   };
-  // Remove question
+
+  // Remove a question from the quiz
   const removeQuestion = (id) => {
     setQuestions((prevQuestion) => prevQuestion.filter((q) => q.id !== id));
   };
-  // Update question
+
+  // Update an existing question
   const updateQuestion = (id, updateQuestion) => {
     setQuestions((prevQuestions) =>
       prevQuestions.map((q) => (q.id === id ? {...q, ...updateQuestion} : q))
@@ -234,7 +228,7 @@ export function QuizProvider({children}) {
         selectedCategory,
         filteredQuestions,
         saveScore,
-        leaderboard,
+        leaderboards,
       }}
     >
       {children}

@@ -1,13 +1,9 @@
-import { useContext, useState } from "react";
+import {useContext, useState} from "react";
 import QuizContext from "./context/QuizContext";
 
 export default function Admin() {
-  const {
-    questions,
-    addQuestion,
-    removeQuestion,
-    updateQuestion
-  } = useContext(QuizContext);
+  const {questions, addQuestion, removeQuestion, updateQuestion} =
+    useContext(QuizContext);
 
   // För att hantera inputvärden för att lägga till en fråga
   const [newQuestion, setNewQuestion] = useState(""); // Frågetext
