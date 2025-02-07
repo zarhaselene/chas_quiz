@@ -22,7 +22,7 @@ export default function Admin() {
   const updateSectionRef = useRef(null);
 
   // Fördefinierade kategorier
-  const categories = ["Geography", "Sports", "Movie", "Science"];
+  const categories = ["All", "Geography", "Sports", "Movie", "Science"];
 
   // Funktion för att lägga till en ny fråga
   const handleAddQuestion = () => {
@@ -77,57 +77,63 @@ export default function Admin() {
           <h2 className="text-xl font-semibold text-white">Add New Question</h2>
         </div>
         <div className="p-4">
-          <input
-            type="text"
-            placeholder="Enter question"
-            value={newQuestion}
-            onChange={(e) => setNewQuestion(e.target.value)}
-            className="block w-full p-2 mb-2 border rounded"
-          />
-          {newOptions.map((option, index) => (
+          <form onSubmit={handleAddQuestion}>
             <input
-              key={index}
               type="text"
-              placeholder={`Option ${index + 1}`}
-              value={option}
-              onChange={(e) =>
-                setNewOptions((prev) => {
-                  const updatedOptions = [...prev];
-                  updatedOptions[index] = e.target.value;
-                  return updatedOptions;
-                })
-              }
+              placeholder="Enter question"
+              value={newQuestion}
+              onChange={(e) => setNewQuestion(e.target.value)}
               className="block w-full p-2 mb-2 border rounded"
+              required
             />
-          ))}
-          <input
-            type="text"
-            placeholder="Correct Answer"
-            value={newAnswer}
-            onChange={(e) => setNewAnswer(e.target.value)}
-            className="block w-full p-2 mb-2 border rounded"
-          />
-
-          {/* Dropdown for selecting category */}
-          <select
-            value={newCategory}
-            onChange={(e) => setNewCategory(e.target.value)}
-            className="block w-full p-2 mb-2 border rounded"
-          >
-            <option value="">Select a category</option>
-            {categories.map((category, index) => (
-              <option key={index} value={category}>
-                {category}
-              </option>
+            {newOptions.map((option, index) => (
+              <input
+                key={index}
+                type="text"
+                placeholder={`Option ${index + 1}`}
+                value={option}
+                onChange={(e) =>
+                  setNewOptions((prev) => {
+                    const updatedOptions = [...prev];
+                    updatedOptions[index] = e.target.value;
+                    return updatedOptions;
+                  })
+                }
+                className="block w-full p-2 mb-2 border rounded"
+                required
+              />
             ))}
-          </select>
+            <input
+              type="text"
+              placeholder="Correct Answer"
+              value={newAnswer}
+              onChange={(e) => setNewAnswer(e.target.value)}
+              className="block w-full p-2 mb-2 border rounded"
+              required
+            />
 
-          <button
-            onClick={handleAddQuestion}
-            className="px-4 py-2 mt-5 bg-purple-600 rounded hover:bg-purple-700 text-white"
-          >
-            Add Question
-          </button>
+            {/* Dropdown for selecting category */}
+            <select
+              value={newCategory}
+              onChange={(e) => setNewCategory(e.target.value)}
+              className="block w-full p-2 mb-2 border rounded"
+              required
+            >
+              <option value="">Select a category</option>
+              {categories.map((category, index) => (
+                <option key={index} value={category}>
+                  {category}
+                </option>
+              ))}
+            </select>
+
+            <button
+              type="submit"
+              className="px-4 py-2 mt-5 bg-purple-600 rounded hover:bg-purple-700 text-white"
+            >
+              Add Question
+            </button>
+          </form>
         </div>
       </div>
 
@@ -140,65 +146,67 @@ export default function Admin() {
           <h2 className="text-xl font-semibold text-white">Update Question</h2>
         </div>
         <div className="p-4">
-          <input
-            type="text"
-            placeholder="Question ID"
-            value={updateQuestionId}
-            onChange={(e) => setUpdateQuestionId(e.target.value)}
-            className="block w-full p-2 mb-2 border rounded cursor-not-allowed"
-            disabled
-          />
-          <input
-            type="text"
-            placeholder="Enter new question text"
-            value={updateQuestionText}
-            onChange={(e) => setUpdateQuestionText(e.target.value)}
-            className="block w-full p-2 mb-2 border rounded"
-          />
-          {updateOptions.map((option, index) => (
+          <form onSubmit={handleUpdateQuestion}>
             <input
-              key={index}
               type="text"
-              placeholder={`Option ${index + 1}`}
-              value={option}
-              onChange={(e) =>
-                setUpdateOptions((prev) => {
-                  const updatedOptions = [...prev];
-                  updatedOptions[index] = e.target.value;
-                  return updatedOptions;
-                })
-              }
+              placeholder="Question ID"
+              value={updateQuestionId}
+              onChange={(e) => setUpdateQuestionId(e.target.value)}
+              className="block w-full p-2 mb-2 border rounded cursor-not-allowed"
+              disabled
+            />
+            <input
+              type="text"
+              placeholder="Enter new question text"
+              value={updateQuestionText}
+              onChange={(e) => setUpdateQuestionText(e.target.value)}
               className="block w-full p-2 mb-2 border rounded"
             />
-          ))}
-          <input
-            type="text"
-            placeholder="Correct Answer"
-            value={updateAnswer}
-            onChange={(e) => setUpdateAnswer(e.target.value)}
-            className="block w-full p-2 mb-2 border rounded"
-          />
-
-          {/* Dropdown for selecting category */}
-          <select
-            value={updateCategory}
-            onChange={(e) => setUpdateCategory(e.target.value)}
-            className="block w-full p-2 mb-2 border rounded"
-          >
-            <option value="">Select a category</option>
-            {categories.map((category, index) => (
-              <option key={index} value={category}>
-                {category}
-              </option>
+            {updateOptions.map((option, index) => (
+              <input
+                key={index}
+                type="text"
+                placeholder={`Option ${index + 1}`}
+                value={option}
+                onChange={(e) =>
+                  setUpdateOptions((prev) => {
+                    const updatedOptions = [...prev];
+                    updatedOptions[index] = e.target.value;
+                    return updatedOptions;
+                  })
+                }
+                className="block w-full p-2 mb-2 border rounded"
+              />
             ))}
-          </select>
+            <input
+              type="text"
+              placeholder="Correct Answer"
+              value={updateAnswer}
+              onChange={(e) => setUpdateAnswer(e.target.value)}
+              className="block w-full p-2 mb-2 border rounded"
+            />
 
-          <button
-            onClick={handleUpdateQuestion}
-            className="px-4 py-2 mt-5 bg-purple-600 rounded hover:bg-purple-700 text-white"
-          >
-            Update Question
-          </button>
+            {/* Dropdown for selecting category */}
+            <select
+              value={updateCategory}
+              onChange={(e) => setUpdateCategory(e.target.value)}
+              className="block w-full p-2 mb-2 border rounded"
+            >
+              <option value="">Select a category</option>
+              {categories.map((category, index) => (
+                <option key={index} value={category}>
+                  {category}
+                </option>
+              ))}
+            </select>
+
+            <button
+              type="submit"
+              className="px-4 py-2 mt-5 bg-purple-600 rounded hover:bg-purple-700 text-white"
+            >
+              Update Question
+            </button>
+          </form>
         </div>
       </div>
 
@@ -210,7 +218,7 @@ export default function Admin() {
           </h3>
         </div>
         {questions.length === 0 ? (
-          <p>No questions available.</p>
+          <p className="p-5">No questions available.</p>
         ) : (
           questions.map((question) => (
             <div className="px-4">

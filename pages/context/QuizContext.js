@@ -5,7 +5,50 @@ const QuizContext = createContext();
 
 export function QuizProvider({children}) {
   // Default questions to be used if no questions exist in localStorage
-  const defaultQuestions = [];
+  const defaultQuestions = [
+    {
+      id: 1,
+      question: "The capital city of Spain?",
+      option: ["Stockholm", "Madrid", "Santiago", "Malmo"],
+      answer: "Madrid",
+      category: "Geography",
+    },
+    {
+      id: 2,
+      question: "The capital city of Sweden?",
+      option: ["Stockholm", "Madrid", "Santiago", "Malmo"],
+      answer: "Stockholm",
+      category: "Geography",
+    },
+    {
+      id: 3,
+      question: "Who played the joker in The dark knight?",
+      option: ["Bruce Lee", "Eddie Murphy", "Julia Roberts", "Heath Ledger"],
+      answer: "Heath Ledger",
+      category: "Movie",
+    },
+    {
+      id: 4,
+      question: "How tall is Zlatan Ibrahimovic?",
+      option: ["190cm", "188cm", "199cm", "195cm"],
+      answer: "195cm",
+      category: "Sports",
+    },
+    {
+      id: 5,
+      question: "How many Ballon d'Or awards has Cristiano Ronaldo won?",
+      option: ["5", "7", "3", "8"],
+      answer: "5",
+      category: "Sports",
+    },
+    {
+      id: 6,
+      question: "The boiling point of water?",
+      option: ["50 celsius", "70 celsius", "95 celsius", "100 celsius"],
+      answer: "100 celsius",
+      category: "Science",
+    },
+  ];
 
   // State to hold the list of questions
   const [questions, setQuestions] = useState([]);
@@ -13,7 +56,7 @@ export function QuizProvider({children}) {
   useEffect(() => {
     if (typeof window !== "undefined") {
       const storedQuestions = JSON.parse(
-        localStorage.getItem("questions") || []
+        localStorage.getItem("questions") || "[]"
       );
 
       const initializedDefaultQuestions = defaultQuestions.map((q, index) => ({
@@ -134,7 +177,6 @@ export function QuizProvider({children}) {
       setCurrentScore((prevScore) => prevScore + 1); // Increase score if correct
     }
 
-    // Log answer history for review
     setAnswerHistory((prev) => [
       ...prev,
       {

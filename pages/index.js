@@ -160,6 +160,7 @@ export default function Home() {
       </div>
     );
   }
+
   // Get the quiz
   return (
     <div className="min-h-screen flex flex-col items-center justify-center py-10 px-4 bg-gray-50">
