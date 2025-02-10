@@ -215,7 +215,7 @@ export function QuizProvider({children}) {
     }
   }, [isQuizFinished, currentScore, playerName, selectedCategory]);
 
-  // Restart the quiz by resetting all states
+  // Restart the quiz by resetting all states, using this function in Quiz page.
   const restartQuiz = () => {
     setCurrentScore(0);
     setCurrentQuestion(0);
@@ -227,7 +227,7 @@ export function QuizProvider({children}) {
     setAnswerHistory([]);
   };
 
-  // Add a new question to the quiz
+  // Add a new question to the quiz, using this function in Admin page.
   const addQuestion = (newQuestion) => {
     setQuestions((prevQuestions) => [
       ...prevQuestions,
@@ -238,24 +238,25 @@ export function QuizProvider({children}) {
     ]);
   };
 
-  // Remove a question from the quiz
+  // Remove a question from the quiz, using this function in Admin page.
   const removeQuestion = (id) => {
     setQuestions((prevQuestion) => prevQuestion.filter((q) => q.id !== id));
   };
 
-  // Update an existing question
+  // Update an existing question, using this function in  Admin page.
   const updateQuestion = (id, updatedQuestion) => {
     setQuestions((prevQuestions) => {
       const updatedQuestions = prevQuestions.map((q) =>
         q.id === id ? {...q, ...updatedQuestion} : q
       );
 
-      localStorage.setItem("questions", JSON.stringify(updatedQuestions)); // Save changes
+      localStorage.setItem("questions", JSON.stringify(updatedQuestions)); // Save changes to localStorage.
       return updatedQuestions;
     });
   };
 
   return (
+    // Give access to states and functions to all children components.
     <QuizContext.Provider
       value={{
         questions,

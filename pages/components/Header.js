@@ -29,25 +29,14 @@ export default function Header() {
                 href="/"
                 className="text-gray-600 hover:text-purple-600 font-medium"
               >
-                Home
+                Play Quiz
               </a>
-              {/* <a
-                href="#"
-                className="text-gray-600 hover:text-purple-600 font-medium"
-              >
-                Categories
-              </a> */}
-              {/* <a
-                href="#"
-                className="text-gray-600 hover:text-purple-600 font-medium"
-              >
-                Practice
-              </a> */}
+
               <a
                 href="/leaderboard"
                 className="text-gray-600 hover:text-purple-600 font-medium flex items-center gap-1"
               >
-                <Trophy className="w-4 h-4" />
+                <Trophy className="w-4 h-4 text-yellow-500" />
                 Leaderboard
               </a>
               <Link href="/admin" legacyBehavior>
@@ -59,13 +48,6 @@ export default function Header() {
 
             {/* Right side buttons */}
             <div className="hidden md:flex items-center gap-4">
-              {/* <button className="p-2 text-gray-600 hover:text-purple-600 rounded-full hover:bg-purple-50">
-                <Search className="w-5 h-5" />
-              </button>
-              <button className="px-4 py-2 text-gray-600 hover:text-purple-600 rounded-full hover:bg-purple-50 flex items-center gap-2">
-                <User className="w-5 h-5" />
-                Sign In
-              </button> */}
               <button className="px-4 py-2 bg-purple-600 text-white rounded-full hover:bg-purple-700 font-medium">
                 <Link href="/">Start Quiz</Link>
               </button>
@@ -94,25 +76,14 @@ export default function Header() {
                   href="/"
                   className="text-gray-600 hover:text-purple-600 font-medium px-2 py-1"
                 >
-                  Home
+                  Play Quiz
                 </a>
-                {/* <a
-                  href="#"
-                  className="text-gray-600 hover:text-purple-600 font-medium px-2 py-1"
-                >
-                  Categories
-                </a> */}
-                {/* <a
-                  href="#"
-                  className="text-gray-600 hover:text-purple-600 font-medium px-2 py-1"
-                >
-                  Practice
-                </a> */}
+
                 <a
                   href="/leaderboard"
                   className="text-gray-600 hover:text-purple-600 font-medium px-2 py-1 flex items-center gap-1"
                 >
-                  <Trophy className="w-4 h-4" />
+                  <Trophy className="w-4 h-4 text-yellow-500" />
                   Leaderboard
                 </a>
                 <Link href="/admin" legacyBehavior>
@@ -121,10 +92,6 @@ export default function Header() {
                   </a>
                 </Link>
                 <div className="border-t border-gray-100 pt-4 flex flex-col gap-2">
-                  {/* <button className="px-4 py-2 text-gray-600 hover:text-purple-600 rounded-full hover:bg-purple-50 flex items-center gap-2">
-                    <User className="w-5 h-5" />
-                    Sign In
-                  </button> */}
                   <button className="px-4 py-2 bg-purple-600 text-white rounded-full hover:bg-purple-700 font-medium">
                     <Link href="/">Start Quiz</Link>
                   </button>

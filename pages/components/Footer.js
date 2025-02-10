@@ -39,8 +39,8 @@ const Footer = () => {
               </h3>
               <ul className="space-y-1">
                 <li>
-                  <a href="#" className="text-gray-600 hover:text-purple-600">
-                    Home
+                  <a href="/" className="text-gray-600 hover:text-purple-600">
+                    Play Quiz
                   </a>
                 </li>
 
@@ -50,6 +50,14 @@ const Footer = () => {
                     className="text-gray-600 hover:text-purple-600"
                   >
                     Leaderboard
+                  </a>
+                </li>
+                <li>
+                  <a
+                    href="/admin"
+                    className="text-gray-600 hover:text-purple-600"
+                  >
+                    Admin
                   </a>
                 </li>
               </ul>

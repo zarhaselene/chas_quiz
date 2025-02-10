@@ -39,9 +39,11 @@ export default function Leaderboard() {
   return (
     <div className="min-h-screen bg-gray-50">
       <div className="max-w-2xl mx-auto p-6">
-        <h1 className="text-4xl font-bold text-center my-8 text-gray-800">
+        <h1 className="flex items-center justify-center text-4xl font-bold text-center my-8 text-gray-800">
+          <Trophy className="w-8 h-8 text-yellow-500 mr-2" />
           Leaderboards
         </h1>
+
         <div className="space-y-6">
           {sortedCategories.map(([category, entries]) => (
             <div
@@ -99,46 +101,4 @@ export default function Leaderboard() {
       </div>
     </div>
   );
-}
-
-{
-  /*
-
-*Original UL-koden*
-
-    <ul className="divide-y divide-gray-100">
-                {entries.map((entry, index) => (
-                  <li
-                    key={index}
-                    className="hover:bg-gray-50 transition-colors"
-                  >
-                    <div className="px-6 py-4 flex items-center justify-between">
-                      <div className="flex items-center gap-4">
-                        <div className="w-8">{getRankDisplay(index + 1)}</div>
-                        <div>
-                          <p className="text-gray-900 font-semibold">
-                            {entry.name}
-                          </p>
-                          <div className="flex items-center gap-1 text-sm text-gray-500">
-                            <Calendar className="w-4 h-4" />
-                            <span>{entry.date}</span>
-                          </div>
-                        </div>
-                      </div>
-                      <div className="font-semibold text-purple-600">
-                        {entry.score}
-                      </div>
-                    </div>
-                  </li>
-                ))}
-              </ul>
-            </div>
-          ))}
-        </div>
-      </div>
-    </div>
-  );
-}
-
-  */
 }

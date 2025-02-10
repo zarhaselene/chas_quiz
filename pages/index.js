@@ -5,7 +5,6 @@ import {BookOpen, Trophy} from "lucide-react";
 
 export default function Home() {
   const {
-    questions,
     currentQuestion,
     handleAnswer,
     restartQuiz,
@@ -15,10 +14,7 @@ export default function Home() {
     currentScore,
     isAnswerSelected,
     answerHistory,
-    selectedCategory,
     filteredQuestions,
-    saveScore,
-    leaderboard,
   } = useContext(QuizContext);
 
   const currentQ = filteredQuestions?.[currentQuestion] ?? {};
@@ -26,6 +22,7 @@ export default function Home() {
   const [nameInput, setNameInput] = useState("");
   const [category, setCategory] = useState("All");
 
+  // Handle Enter key press
   const handleKeyDown = (e) => {
     if (e.key === "Enter") {
       e.preventDefault();
@@ -35,7 +32,7 @@ export default function Home() {
     }
   };
 
-  // If quiz is not started
+  // If quiz is not started, it shows the start quiz form
   if (!isQuizStarted) {
     return (
       <div className="min-h-screen flex flex-col items-center justify-center py-10 px-4 bg-gray-100">
@@ -102,6 +99,7 @@ export default function Home() {
       </div>
     );
   }
+
   //If quiz is finished
   if (isQuizFinished) {
     return (
